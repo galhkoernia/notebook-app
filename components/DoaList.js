@@ -11,7 +11,7 @@ const DoaList = ({ doaList }) => {
           key={index}
           className="p-4 bg-white border border-green-200 rounded shadow-sm"
         >
-          <p className="text-lg text-gray-800 italic">"{doa.isi}"</p>
+          <p className="text-lg text-gray-800 italic">{"{doa.isi}"}</p>
           <p className="text-sm text-right text-gray-500 mt-2">
             🗓 {doa.tanggal}
           </p>
