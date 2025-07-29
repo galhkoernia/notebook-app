@@ -98,7 +98,7 @@ const LoginPage = () => {
               <div className="relative">
                 <input
                   type="text"
-                  id="Bint"
+                  id="Binti Ainur Rohmah"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   className="w-full px-5 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/60 focus:ring-2 focus:ring-yellow-400 focus:border-transparent outline-none transition-all"

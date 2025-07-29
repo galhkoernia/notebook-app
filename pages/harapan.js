@@ -8,10 +8,14 @@ const HarapanPage = () => {
   const router = useRouter();
 
   useEffect(() => {
-    const storedPrayers = JSON.parse(
-      localStorage.getItem("skripsiPrayers") || "[]"
-    );
-    setPrayers(storedPrayers);
+    try {
+      const stored = localStorage.getItem("skripsiPrayers");
+      const parsed = stored ? JSON.parse(stored) : [];
+      setPrayers(parsed);
+    } catch (error) {
+      console.error("Error parsing stored prayers:", error);
+      setPrayers([]);
+    }
   }, []);
 
   const filteredPrayers =
@@ -25,7 +29,7 @@ const HarapanPage = () => {
         <title>Taman Harapan | Skripsi</title>
       </Head>
 
-      {/* Header Section */}
+      {/* Header */}
       <header className="text-center py-12 px-4 bg-white">
         <div className="max-w-4xl mx-auto">
           <h1 className="text-4xl md:text-5xl font-bold text-emerald-900 mb-3">
@@ -53,7 +57,7 @@ const HarapanPage = () => {
         </div>
       </header>
 
-      {/* Filter Section */}
+      {/* Filter */}
       <div className="px-4 max-w-2xl mx-auto mb-8">
         <div className="flex justify-center space-x-4">
           <button
@@ -79,7 +83,7 @@ const HarapanPage = () => {
         </div>
       </div>
 
-      {/* Prayers List Section */}
+      {/* Prayer List */}
       <section className="py-8 px-4 bg-emerald-50 min-h-[50vh]">
         {filteredPrayers.length === 0 ? (
           <div className="max-w-2xl mx-auto text-center py-12">
@@ -121,7 +125,6 @@ const HarapanPage = () => {
                 className="bg-white p-6 rounded-xl shadow-sm border border-emerald-100 relative overflow-hidden animate-fadeInUp"
                 style={{ animationDelay: `${index * 0.1}s` }}
               >
-                {/* Floral decoration */}
                 <div className="absolute top-0 right-0 text-yellow-400 opacity-20">
                   <svg
                     className="w-16 h-16"
@@ -137,14 +140,20 @@ const HarapanPage = () => {
                 </div>
 
                 <div className="relative z-10">
-                  <p className="text-gray-700 mb-4">
-                    <span className="font-arabic text-emerald-600 mr-1">"</span>
-                    {prayer.prayer}
-                    <span className="font-arabic text-emerald-600 ml-1">"</span>
-                  </p>
+                  {prayer?.prayer && (
+                    <p className="text-gray-700 mb-4">
+                      <span className="font-arabic text-emerald-600 mr-1">
+                        &ldquo;
+                      </span>
+                      {prayer.prayer}
+                      <span className="font-arabic text-emerald-600 ml-1">
+                        &rdquo;
+                      </span>
+                    </p>
+                  )}
 
                   <div className="flex flex-wrap justify-between items-center text-sm text-gray-500 border-t border-emerald-50 pt-3">
-                    {prayer.name && (
+                    {prayer?.name && (
                       <div className="flex items-center">
                         <svg
                           className="w-4 h-4 mr-1 text-emerald-600"
@@ -162,28 +171,30 @@ const HarapanPage = () => {
                         <span>Dari: {prayer.name}</span>
                       </div>
                     )}
-                    <div className="flex items-center">
-                      <svg
-                        className="w-4 h-4 mr-1 text-emerald-600"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth="2"
-                          d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-                        />
-                      </svg>
-                      <span>
-                        {new Date(prayer.date).toLocaleDateString("id-ID", {
-                          day: "numeric",
-                          month: "long",
-                          year: "numeric",
-                        })}
-                      </span>
-                    </div>
+                    {prayer?.date && (
+                      <div className="flex items-center">
+                        <svg
+                          className="w-4 h-4 mr-1 text-emerald-600"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth="2"
+                            d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                          />
+                        </svg>
+                        <span>
+                          {new Date(prayer.date).toLocaleDateString("id-ID", {
+                            day: "numeric",
+                            month: "long",
+                            year: "numeric",
+                          })}
+                        </span>
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>
@@ -192,19 +203,18 @@ const HarapanPage = () => {
         )}
       </section>
 
-      {/* Special Message Section */}
+      {/* Special Message */}
       <section className="py-12 px-4 bg-white">
         <div className="max-w-2xl mx-auto text-center">
           <div className="w-16 h-0.5 bg-yellow-400 mx-auto mb-6"></div>
           <p className="text-lg italic text-emerald-800">
-            {
-              "Jika harapanmu belum terwujud, mungkin sedang ditanam dan disiram diam-diam. Teruskan langkahmu."
-            }
+            Jika harapanmu belum terwujud, mungkin sedang ditanam dan disiram
+            diam-diam. Teruskan langkahmu.
           </p>
         </div>
       </section>
 
-      {/* Action Buttons */}
+      {/* Buttons */}
       <section className="py-8 px-4 bg-emerald-50">
         <div className="max-w-xs mx-auto flex flex-col space-y-4">
           <button
@@ -222,7 +232,7 @@ const HarapanPage = () => {
         </div>
       </section>
 
-      {/* Animation Styles */}
+      {/* Style */}
       <style jsx global>{`
         @keyframes fadeInUp {
           from {
@@ -234,12 +244,10 @@ const HarapanPage = () => {
             transform: translateY(0);
           }
         }
-
         .animate-fadeInUp {
           animation: fadeInUp 0.6s ease-out forwards;
           opacity: 0;
         }
-
         .font-arabic {
           font-family: "Amiri", "Traditional Arabic", serif;
         }
